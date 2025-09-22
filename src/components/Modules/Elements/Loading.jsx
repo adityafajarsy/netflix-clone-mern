@@ -1,6 +1,8 @@
 import React from "react";
 
 const Loading = () => {
+
+  // cuman testing aja
   return (
     <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
       <span className="loading loading-infinity w-56 text-gray-600"></span>
