@@ -30,7 +30,7 @@ const AccountMenu = () => {
     <div className="flex dropdown dropdown-hover dropdown-end">
       <div className="avatar" tabIndex={0}>
         <div className="w-12 rounded">
-          <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
+          <img src="https://admin103.digivestasi.com/upload/posts/timothy-ronald-sosok-investor-muda-yang-menginspirasi-generasi-baru-bangun-masa-depan-indonesia-6861f20dd97fc.webp" />
         </div>
       </div>
       <div className="flex flex-col gap-2 py-2 px-4 dropdown-content absolute top-10 z-30 bg-black text-stone-200 rounded-xl">

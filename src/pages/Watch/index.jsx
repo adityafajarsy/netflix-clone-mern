@@ -21,7 +21,7 @@ const Watch = () => {
         width={"100%"}
         height={"100vh"}
         playing={true}
-        muted={true}
+        muted={false}
         controls={false}
       />
     </BrowseLayout>
