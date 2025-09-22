@@ -1,0 +1,20 @@
+import { axiosInstanceExpress } from "./axios";
+
+export const checkFavoriteMovies = async ({
+  emailStorage,
+  tokenStorage,
+  idMovie,
+}) => {
+  try {
+    const isFavorited = await axiosInstanceExpress.post("my-movies/check", {
+      email: emailStorage,
+      token: tokenStorage,
+      movieID: idMovie,
+    });
+    if (isFavorited.status === 200) {
+      return isFavorited.data.data.isFavorited;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
