@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <footer className="w-full text-white bg-black border-t-8 border-stone-900">
       <div>
-        Question? Call <a href="">123-421-124</a>
+        Question? Call <a href="">Aditya Fsy</a>
       </div>
 
       <ul className="grid sm:grid-cols-4 gap-4 p-8">
