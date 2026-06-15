@@ -1,11 +1,11 @@
-require("dotenv").config();
+import "dotenv/config";
 
-const express = require("express");
-const cors = require("cors");
-const routes = require("./routes/index.route");
-const mongoose = require("mongoose");
-const swaggerUI = require("swagger-ui-express");
-const YAML = require("yamljs");
+import express from "express";
+import cors from "cors";
+import routes from "./routes/index.route.js";
+import mongoose from "mongoose";
+import swaggerUI from "swagger-ui-express";
+import YAML from "yamljs";
 const swaggerDocs = YAML.load("./swagger.yaml");
 
 const { API_PORT, MONGO_URL } = process.env;
@@ -30,5 +30,4 @@ app.use(routes);
 app.listen(PORT, () => {
   console.log("Server Running in port " + PORT);
 });
-
-module.exports = app;
+export default app;

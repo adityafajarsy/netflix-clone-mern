@@ -2,12 +2,21 @@ import React, { useEffect, useState } from "react";
 import Recommendation from "./Recommendation";
 import ReactPlayer from "react-player";
 import { useAtom } from "jotai";
-import { idMovieAtom, isOpenModalAtom } from "@/jotai/atoms";
+import {
+  idMovieAtom,
+  isOpenModalAtom,
+  emailStorageAtom,
+  tokenAtom,
+  isFavoritedAtom,
+} from "@/jotai/atoms";
 import { MdClose } from "react-icons/md";
-import { GoPlay, GoPlusCircle } from "react-icons/go";
+import { GoCheck, GoPlay, GoPlusCircle } from "react-icons/go";
 import { getMovieDetail } from "@/utils/getMovieDetail";
 import { getVideoUrl } from "@/utils/getVideoUrl";
 import { useNavigate } from "react-router-dom";
+import { axiosInstanceExpress } from "@/utils/axios";
+import Notification from "../../Elements/Notification";
+import { checkFavoriteMovies } from "@/utils/checkFavoriteMovies";
 
 const Modal = () => {
   const [isOpenModal, setIsOpenModal] = useAtom(isOpenModalAtom);
@@ -15,6 +24,12 @@ const Modal = () => {
 
   const [movieDetail, setMovieDetail] = useState([]);
   const [idMovie, setIdMovie] = useAtom(idMovieAtom);
+  const [tokenStorage] = useAtom(tokenAtom);
+  const [emailStorage] = useAtom(emailStorageAtom);
+  const [isFavorited, setIsFavorited] = useAtom(isFavoritedAtom);
+
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [notifMessage, setNotifMessage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -24,8 +39,71 @@ const Modal = () => {
         setMovieDetail(result)
       );
       getVideoUrl({ movie_id: idMovie }).then((result) => setVideoUrl(result));
+      checkFavoriteMovies({
+        emailStorage,
+        tokenStorage,
+        idMovie: idMovie,
+      }).then((result) => setIsFavorited(result));
     }
-  }, [idMovie, isOpenModal]);
+  }, [idMovie, isOpenModal, emailStorage, tokenStorage, setIsFavorited]);
+
+  const handleAddFavoriteMovie = async () => {
+    if (!emailStorage && !tokenStorage) return;
+
+    try {
+      setIsSubmit(true);
+      const addMovie = await axiosInstanceExpress.post("my-movies", {
+        email: emailStorage,
+        token: tokenStorage,
+        data: movieDetail,
+      });
+      if (addMovie.status !== 201)
+        return setNotifMessage(`Film ${movieDetail.title} Failed to Add`);
+      setNotifMessage(`Film ${movieDetail.title} Success Added`);
+      setIsFavorited(true);
+
+      setTimeout(() => {
+        setIsSubmit(false);
+        setNotifMessage(null);
+      }, 3000);
+    } catch (error) {
+      setNotifMessage(`Sorry, ${error.message}`);
+
+      setTimeout(() => {
+        setIsSubmit(false);
+        setNotifMessage(null);
+      }, 3000);
+    }
+  };
+
+  const handleRemoveFavoriteMovies = async () => {
+    if (!emailStorage && !tokenStorage) return;
+    try {
+      setIsSubmit(true);
+      const removeMovie = await axiosInstanceExpress.delete("my-movies", {
+        data: {
+          email: emailStorage,
+          token: tokenStorage,
+          movieID: movieDetail.id,
+        },
+      });
+      if (removeMovie.status !== 204) {
+        return setNotifMessage(`"Failed to Remove Movie ${movieDetail.title}"`);
+      }
+      setNotifMessage(`${movieDetail.title} Success to Remove`);
+      setIsFavorited(false);
+      setTimeout(() => {
+        setIsSubmit(false);
+        setNotifMessage(null);
+      }, 3000);
+    } catch (error) {
+      setNotifMessage(`Sorry, ${error.message}`);
+      setTimeout(() => {
+        setIsSubmit(false);
+        setNotifMessage(null);
+      }, 3000);
+    }
+  };
 
   const genreMapping = (genres) => {
     if (!genres) return "";
@@ -43,6 +121,7 @@ const Modal = () => {
 
   return (
     <dialog className={`modal ${isOpenModal ? "modal-open" : ""}`}>
+      {isSubmit && notifMessage && <Notification message={notifMessage} />}
       <div className="modal-box w-full max-w-screen-md  p-0">
         <div className="relative">
           <div className="h-[400px] w-full ">
@@ -80,8 +159,19 @@ const Modal = () => {
               >
                 <GoPlay size={32} /> Play
               </button>
-              <button className="text-slate-400 hover:text-white">
-                <GoPlusCircle size={44} />
+              <button
+                className="text-slate-400 hover:text-white"
+                onClick={
+                  isFavorited
+                    ? handleRemoveFavoriteMovies
+                    : handleAddFavoriteMovie
+                }
+              >
+                {isFavorited ? (
+                  <GoCheck size={44} className="text-green-500 animate-pulse" />
+                ) : (
+                  <GoPlusCircle size={44} />
+                )}
               </button>
             </div>
           </div>

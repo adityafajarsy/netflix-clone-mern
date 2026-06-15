@@ -1,13 +1,22 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
-const request = require("supertest");
-const app = require("../index.js");
+import "dotenv/config";
+import mongoose from "mongoose";
+import request from "supertest";
+import app from "../index.js";
+import { User } from "../models/index.model.js";
 
-beforeEach(async () => {
+beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URL);
+  await User.deleteMany({ email: "testing@123.com" });
+  await User.create({
+    email: "testing@123.com",
+    password: "testpassword",
+    token: "xxx12332",
+    favoriteMovies: []
+  });
 });
 
-afterEach(async () => {
+afterAll(async () => {
+  await User.deleteMany({ email: "testing@123.com" });
   await mongoose.connection.close();
 });
 

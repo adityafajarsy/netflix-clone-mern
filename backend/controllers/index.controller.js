@@ -1,6 +1,6 @@
-const { ERR, OK } = require("../utils/response");
-const { User } = require("../models/index.model");
-const argon2 = require("argon2");
+import { ERR, OK } from "../utils/response.js";
+import { User } from "../models/index.model.js";
+import argon2 from "argon2";
 
 const GetFavoriteMovies = async (req, res) => {
   return OK(res, 200, req.user, "Get Favorite Movies Success");
@@ -121,7 +121,7 @@ const SignUpUser = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   GetFavoriteMovies,
   AddFavoriteMovies,
   RemoveFavoriteMovies,

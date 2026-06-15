@@ -14,7 +14,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4 ">
             <img onClick={() => navigate("/browse")}
-              src="netflix-logo-icon-dea-afrizal.png"
+              src="/netflix-logo-icon-dea-afrizal.png"
               alt="Logo"
               className="w-[120px] ml-2 cursor-pointer hover:scale-125 transition-all"
             />

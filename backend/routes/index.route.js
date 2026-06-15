@@ -1,6 +1,8 @@
-const router = require("express").Router();
-const UserController = require("../controllers/index.controller");
-const { checkToken } = require("../utils/auth");
+import { Router } from "express";
+import UserController from "../controllers/index.controller.js";
+import { checkToken } from "../utils/auth.js";
+
+const router = Router();
 
 router.get(
   "/my-movies/:email/:token",
@@ -20,4 +22,5 @@ router.delete("/my-token",checkToken, UserController.SignOutToken)
 // Sign Up user
 router.post("/sign-up", UserController.SignUpUser)
 
-module.exports = router;
+export default router;
+

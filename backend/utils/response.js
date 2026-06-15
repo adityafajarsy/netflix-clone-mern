@@ -6,4 +6,4 @@ function ERR(response, statusCode, message) {
   response.status(statusCode).json({ isError: true, message });
 }
 
-module.exports = {OK, ERR}
+export { OK, ERR };

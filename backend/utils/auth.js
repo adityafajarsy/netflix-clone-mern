@@ -1,5 +1,5 @@
-const { User } = require("../models/index.model");
-const { ERR } = require("./response");
+import { User } from "../models/index.model.js";
+import { ERR } from "./response.js";
 
 const checkToken = async (req, res, next) => {
   const email = req.body?.email || req.params?.email;
@@ -23,4 +23,5 @@ const checkToken = async (req, res, next) => {
   }
 };
 
-module.exports = { checkToken };
+export { checkToken };
+

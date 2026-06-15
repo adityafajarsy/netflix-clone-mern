@@ -10,10 +10,10 @@
   ],
   "license": "ISC",
   "author": "Aditya Fajar sy",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENVY=test jest --forceExit",
+    "test": "cross-env NODE_ENVY=test NODE_OPTIONS=--experimental-vm-modules jest --forceExit",
     "dev": "nodemon index.js"
   },
   "dependencies": {
