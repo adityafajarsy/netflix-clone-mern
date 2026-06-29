@@ -2,19 +2,20 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Landing from "./pages/Landing/Index.jsx";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Favorite from "./pages/Favorite";
-
 import MovieDetail from "./pages/MovieDetail";
+import TvSeries from "./pages/TvSeries";
+import Genres from "./pages/Genres";
+import GenreMovies from "./pages/GenreMovies";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Landing />,
+    element: <Browse />,
   },
   {
     path: "browse",
@@ -38,8 +39,24 @@ const router = createBrowserRouter([
   },
   {
     path: "/favorite",
-    element: <Favorite />
-  }
+    element: <Favorite />,
+  },
+  {
+    path: "/tv-series",
+    element: <TvSeries />,
+  },
+  {
+    path: "/tv/:id",
+    element: <MovieDetail />,
+  },
+  {
+    path: "/genres",
+    element: <Genres />,
+  },
+  {
+    path: "/genre/:genreId",
+    element: <GenreMovies />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
@@ -47,3 +64,4 @@ createRoot(document.getElementById("root")).render(
     <RouterProvider router={router} />
   </StrictMode>
 );
+

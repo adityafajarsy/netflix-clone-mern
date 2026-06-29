@@ -80,11 +80,10 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-[9999] transition-all duration-300 ${
-        isScrolled
+      className={`fixed top-0 left-0 w-full z-[9999] transition-all duration-300 ${isScrolled
           ? "md:bg-[#09090B]/95 md:backdrop-blur-xl md:border-b md:border-[#3F3F46]/70 md:shadow-2xl py-2 md:py-3"
           : "bg-gradient-to-b from-[#09090B] via-[#09090B]/80 to-transparent py-2 md:py-4"
-      }`}
+        }`}
     >
       {/* DESKTOP HEADER */}
       <div className="hidden md:flex max-w-7xl mx-auto px-6 lg:px-12 justify-between items-center">
@@ -125,11 +124,10 @@ const Navbar = () => {
                   <li key={index}>
                     <a
                       href={item.url}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-                        isActive
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isActive
                           ? "text-[#FAFAFA] bg-[#18181B] font-semibold border border-[#3F3F46]/60 shadow-sm"
                           : "text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18181B]/60"
-                      }`}
+                        }`}
                     >
                       {getNavIcon(item.icon)}
                       <span>{item.title}</span>
@@ -150,11 +148,10 @@ const Navbar = () => {
       {/* MOBILE CAPSULE HEADER (WITH SCROLL TRANSITION MATCHING REFERENCE IMAGES) */}
       <div className="md:hidden transition-all duration-300">
         <div
-          className={`transition-all duration-300 flex items-center justify-between ${
-            isScrolled
+          className={`transition-all duration-300 flex items-center justify-between ${isScrolled
               ? "mx-3 mt-2 bg-[#09090B]/95 backdrop-blur-xl border border-[#3F3F46]/80 rounded-full px-4 py-2.5 shadow-2xl"
               : "w-full px-5 py-3 bg-transparent border-transparent rounded-none shadow-none"
-          }`}
+            }`}
         >
           {/* Brand Logo */}
           <div
@@ -250,7 +247,7 @@ const Navbar = () => {
                   of={LIST_NAVBAR}
                   render={(item, index) => {
                     const isActive = location.pathname === item.url && (item.title === "Home" || item.title === "Movies");
-                    
+
                     if (item.isSpecial) {
                       return (
                         <a
@@ -271,11 +268,10 @@ const Navbar = () => {
                       <a
                         key={index}
                         href={item.url}
-                        className={`px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center gap-3 ${
-                          isActive
+                        className={`px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center gap-3 ${isActive
                             ? "text-[#FAFAFA] bg-[#27272A] font-semibold border border-[#3F3F46]"
                             : "text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#27272A]/60"
-                        }`}
+                          }`}
                       >
                         {getNavIcon(item.icon)}
                         <span>{item.title}</span>

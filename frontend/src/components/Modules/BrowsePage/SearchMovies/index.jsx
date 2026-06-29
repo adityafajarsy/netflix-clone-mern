@@ -28,22 +28,35 @@ const SearchMovies = () => {
   }, [searchQuery]);
 
   return (
-    <div className="grid grid-cols-4 p-8 mt-10">
-      <EachUtils
-        of={movieList}
-        render={(item, index) => (
-          <div
-            className=" h-72 mt-4"
-            key={index}
-            onMouseLeave={() => {
-              setIsHover(false);
-              setIdMovie(null);
-            }}
-          >
-            <MovieCard data={item} isHover={isHover} setIsHover={setIsHover} />
-          </div>
-        )}
-      />
+    <div className="max-w-7xl mx-auto pt-24 pb-20 px-4 sm:px-6 lg:px-12">
+      <h2 className="text-xl sm:text-2xl font-bold text-[#FAFAFA] mb-6 select-none flex items-center gap-2">
+        <span className="text-[#A1A1AA]">Search Results for:</span>
+        <span className="text-[#8B5CF6]">"{searchQuery}"</span>
+      </h2>
+      
+      {movieList.length === 0 ? (
+        <div className="bg-[#18181B] border border-[#3F3F46]/40 rounded-2xl p-12 text-center max-w-lg mx-auto mt-8">
+          <p className="text-lg font-medium text-[#A1A1AA]">No movies found.</p>
+          <p className="text-sm text-[#A1A1AA]/70 mt-1">Try searching with a different keyword.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+          <EachUtils
+            of={movieList}
+            render={(item, index) => (
+              <div
+                key={item.id || index}
+                onMouseLeave={() => {
+                  setIsHover(false);
+                  setIdMovie(null);
+                }}
+              >
+                <MovieCard data={item} isHover={isHover} setIsHover={setIsHover} />
+              </div>
+            )}
+          />
+        </div>
+      )}
     </div>
   );
 };

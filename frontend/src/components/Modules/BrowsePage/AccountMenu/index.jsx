@@ -48,25 +48,28 @@ const AccountMenu = () => {
   }
 
   return (
-    <div className="relative group">
+    <div className="relative group py-1">
       <button className="flex items-center gap-2 focus:outline-none cursor-pointer">
-        <div className="w-9 h-9 rounded-full bg-[#27272A] border border-[#3F3F46] flex items-center justify-center text-[#FAFAFA] font-semibold hover:border-[#7C3AED] transition-colors overflow-hidden">
+        <div className="w-9 h-9 rounded-full bg-[#27272A] border border-[#3F3F46] flex items-center justify-center text-[#FAFAFA] font-semibold hover:border-[#7C3AED] group-hover:border-[#7C3AED] transition-colors overflow-hidden">
           <GoPerson size={18} />
         </div>
       </button>
-      
-      <div className="absolute right-0 top-11 hidden group-hover:flex flex-col gap-3 p-4 w-56 bg-[#18181B] border border-[#3F3F46] rounded-xl shadow-2xl z-50 transition-all duration-200">
-        <div className="border-b border-[#3F3F46] pb-2">
-          <p className="text-xs text-[#A1A1AA] uppercase font-semibold tracking-wider">Account</p>
-          <p className="text-sm font-medium text-[#FAFAFA] truncate mt-0.5">{email}</p>
+
+      {/* Invisible bridge to prevent mouseleave when moving to dropdown */}
+      <div className="absolute right-0 top-full pt-2 hidden group-hover:block z-50">
+        <div className="flex flex-col gap-3 p-4 w-56 bg-[#18181B] border border-[#3F3F46] rounded-xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150">
+          <div className="border-b border-[#3F3F46] pb-2">
+            <p className="text-xs text-[#A1A1AA] uppercase font-semibold tracking-wider">Account</p>
+            <p className="text-sm font-medium text-[#FAFAFA] truncate mt-0.5">{email}</p>
+          </div>
+          <button
+            onClick={handleSignOut}
+            className="flex items-center gap-2 text-sm text-[#A1A1AA] hover:text-[#EF4444] transition-colors cursor-pointer w-full text-left py-1"
+          >
+            <GoSignOut size={16} />
+            <span>Sign Out</span>
+          </button>
         </div>
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-2 text-sm text-[#A1A1AA] hover:text-[#EF4444] transition-colors cursor-pointer w-full text-left py-1"
-        >
-          <GoSignOut size={16} />
-          <span>Sign Out</span>
-        </button>
       </div>
     </div>
   );

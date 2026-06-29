@@ -14,7 +14,15 @@ const AddFavoriteMovies = async (req, res) => {
     // ambil model mongoose
     const user = await User.findById(req.user._id);
 
-    // menentukan key yang mau diupdate
+    // Cek duplikat sebelum push
+    const alreadyExists = user.favoriteMovies.some(
+      (movie) => String(movie.id) === String(data.id)
+    );
+    if (alreadyExists) {
+      return OK(res, 201, user.favoriteMovies, "Movie already in favorites");
+    }
+
+    // Tambahkan film ke favorites
     user.favoriteMovies.push(data);
 
     // action untuk update insert data
@@ -33,9 +41,9 @@ const RemoveFavoriteMovies = async (req, res) => {
     // ambil model dari mongodb
     const user = await User.findById(req.user._id);
 
-    // pengecekan ada ngga movie id nya di database? kalo ngga ada "MOvie not Found"
+    // pengecekan ada ngga movie id nya di database? kalo ngga ada "Movie not Found"
     const existingMovie = user.favoriteMovies.some(
-      (movie) => movie.id == movieID
+      (movie) => String(movie.id) === String(movieID)
     );
 
     if (!existingMovie) {
@@ -44,7 +52,7 @@ const RemoveFavoriteMovies = async (req, res) => {
 
     // Filter id movie yang dikirim client dengan database, dibuang, sisanya disimpen
     user.favoriteMovies = user.favoriteMovies.filter(
-      (movie) => movie.id !== movieID
+      (movie) => String(movie.id) !== String(movieID)
     );
 
     // save dan jadilah
@@ -60,8 +68,10 @@ const CheckFavoriteMovies = async (req, res) => {
   const { movieID } = req.body;
   try {
     const user = await User.findById(req.user._id);
-    const isFavorited = await user.favoriteMovies.some(
-      (movie) => movie.id === movieID
+    // Use String comparison to handle number vs string type mismatch
+    // (TMDB returns movie.id as number, but params from URL come as string)
+    const isFavorited = user.favoriteMovies.some(
+      (movie) => String(movie.id) === String(movieID)
     );
     return OK(res, 200, { isFavorited }, "Check Favorite Movie By ID Success");
   } catch (error) {

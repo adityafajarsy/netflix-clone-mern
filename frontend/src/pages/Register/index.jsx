@@ -51,7 +51,7 @@ const Register = () => {
   };
 
   return (
-    <DefaultLayout>
+    <div className="min-h-screen bg-[#09090B] relative">
       <ToastContainer
         position="top-center"
         autoClose={4000}
@@ -94,14 +94,7 @@ const Register = () => {
 
         {/* Auth Card Container */}
         <div className="relative z-10 w-full max-w-md bg-[#18181B]/85 backdrop-blur-2xl border border-[#3F3F46]/70 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-black/80 my-16">
-          <div className="flex items-center justify-between mb-6">
-            <button
-              onClick={() => navigate("/")}
-              className="flex items-center gap-1.5 text-xs font-semibold text-[#A1A1AA] hover:text-[#FAFAFA] bg-[#27272A]/80 hover:bg-[#3F3F46]/80 px-3 py-1.5 rounded-xl border border-[#3F3F46]/50 transition-all cursor-pointer"
-            >
-              <GoChevronLeft size={16} />
-              <span>Back to Home</span>
-            </button>
+          <div className="flex items-center justify-end mb-6">
             <span className="text-xs font-semibold text-[#8B5CF6] bg-[#8B5CF6]/10 px-2.5 py-1 rounded-lg border border-[#8B5CF6]/30">
               Create Account
             </span>
@@ -188,7 +181,7 @@ const Register = () => {
           </form>
         </div>
       </div>
-    </DefaultLayout>
+    </div>
   );
 };
 

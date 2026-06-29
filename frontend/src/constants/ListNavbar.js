@@ -11,12 +11,12 @@ export const LIST_NAVBAR = [
   },
   {
     title: "TV Series",
-    url: "/browse",
+    url: "/tv-series",
     icon: "tv",
   },
   {
     title: "Genres",
-    url: "/browse",
+    url: "/genres",
     icon: "genres",
   },
   {
