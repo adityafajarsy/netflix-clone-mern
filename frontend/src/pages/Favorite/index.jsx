@@ -2,18 +2,14 @@ import EachUtils from "@/utils/EachUtils";
 import React, { useEffect, useState } from "react";
 import MovieCard from "@/components/Modules/BrowsePage/MovieCard";
 import BrowseLayout from "@/components/Layouts/BrowseLayout";
-
 import { useAtom } from "jotai";
-import { emailStorageAtom, idMovieAtom, isFavoritedAtom, tokenAtom } from "@/jotai/atoms";
+import { emailStorageAtom, isFavoritedAtom, tokenAtom } from "@/jotai/atoms";
 import { axiosInstanceExpress } from "@/utils/axios";
-import Modal from "@/components/Modules/BrowsePage/Modal";
 
 const Favorite = () => {
-  const [isHover, setIsHover] = useState(false);
-  const [idMovie, setIdMovie] = useAtom(idMovieAtom);
   const [emailStorage] = useAtom(emailStorageAtom);
   const [tokenStorage] = useAtom(tokenAtom);
-  const [isFavorited] = useAtom(isFavoritedAtom)
+  const [isFavorited] = useAtom(isFavoritedAtom);
 
   const [movieList, setMovieList] = useState([]);
 
@@ -28,45 +24,44 @@ const Favorite = () => {
     }
   };
 
-
   useEffect(() => {
     if (emailStorage && tokenStorage) {
-      getFavoriteMovies().then((result) =>
-        setMovieList(result.data.favoriteMovies)
-      );
+      getFavoriteMovies().then((result) => {
+        if (result && result.data && result.data.favoriteMovies) {
+          setMovieList(result.data.favoriteMovies);
+        }
+      });
     }
   }, [emailStorage, tokenStorage, isFavorited]);
 
   return (
     <BrowseLayout>
-      <div className="mt-20 px-8">
-        <h3 className="text-white font-bold text-2xl">My Favorite Movies</h3>
-        {movieList.length === 0 && <p>You Have No Favorite Movies List!</p>}
+      <div className="max-w-7xl mx-auto pt-28 px-6 lg:px-12 min-h-[70vh] pb-20">
+        <div className="flex items-center gap-3 mb-6 select-none">
+          <div className="w-1.5 h-7 bg-gradient-to-b from-[#7C3AED] to-[#8B5CF6] rounded-full" />
+          <h3 className="text-3xl font-bold tracking-tight text-[#FAFAFA] font-sans">
+            My Favorite Movies
+          </h3>
+        </div>
+
+        {movieList.length === 0 ? (
+          <div className="bg-[#18181B] border border-[#3F3F46]/40 rounded-2xl p-12 text-center max-w-lg mx-auto mt-12">
+            <p className="text-lg font-medium text-[#A1A1AA]">Your favorite list is empty.</p>
+            <p className="text-sm text-[#A1A1AA]/70 mt-1">Explore movies and click the bookmark icon to save them here.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 mt-6">
+            <EachUtils
+              of={movieList}
+              render={(item, index) => (
+                <div key={item.id || index}>
+                  <MovieCard data={item} />
+                </div>
+              )}
+            />
+          </div>
+        )}
       </div>
-      <div className="grid sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 grid-cols-2 gap-4 px-8 mt-4">
-        <EachUtils
-          of={movieList}
-          render={(item, index) => (
-            <div key={index}>
-              <div
-                className="h-72 mt-4"
-                key={index}
-                onMouseLeave={() => {
-                  setIsHover(false);
-                  setIdMovie(null);
-                }}
-              >
-                <MovieCard
-                  data={item}
-                  isHover={isHover}
-                  setIsHover={setIsHover}
-                />
-              </div>
-            </div>
-          )}
-        />
-      </div>
-      <Modal />
     </BrowseLayout>
   );
 };

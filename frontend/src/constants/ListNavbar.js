@@ -1,18 +1,35 @@
 export const LIST_NAVBAR = [
   {
     title: "Home",
-    url: "/",
+    url: "/browse",
+    icon: "home",
   },
   {
     title: "Movies",
-    url: "/",
+    url: "/browse",
+    icon: "movies",
   },
   {
-    title: "New & Popular",
-    url: "/",
+    title: "TV Series",
+    url: "/browse",
+    icon: "tv",
   },
   {
-    title: "My List",
+    title: "Genres",
+    url: "/browse",
+    icon: "genres",
+  },
+  {
+    title: "Trending 2026",
+    url: "/browse",
+    icon: "trending",
+    isSpecial: true,
+  },
+  {
+    title: "Favorites",
     url: "/favorite",
+    icon: "favorites",
   },
 ];
+
+

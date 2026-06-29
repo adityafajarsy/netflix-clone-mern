@@ -3,12 +3,10 @@ import React, { useEffect, useState } from "react";
 import MovieCard from "../MovieCard";
 import CarouselLayout from "@/components/Layouts/CarouselLayout";
 import { useAtom } from "jotai";
-import { idMovieAtom, isFetchingAtom } from "@/jotai/atoms";
+import { isFetchingAtom } from "@/jotai/atoms";
 import { getMoviesByType } from "@/utils/getMoviesByType";
 
 const MovieList = ({ title, moviesType }) => {
-  const [isHover, setIsHover] = useState(false);
-  const [, setIdMovie] = useAtom(idMovieAtom);
   const [movieList, setMovieList] = useState([]);
   const [, setIsFetching] = useAtom(isFetchingAtom);
 
@@ -22,31 +20,31 @@ const MovieList = ({ title, moviesType }) => {
         .finally(() => {
           setTimeout(() => {
             setIsFetching(false);
-          }, 500);
+          }, 400);
         });
     }
   }, [moviesType]);
 
   return (
-    <section className="px-8 py-4 relative">
-      <h3 className="text-3xl font-semibold mb-2 text-white">{title}</h3>
+    <section className="max-w-7xl mx-auto px-6 lg:px-12 py-6 relative">
+      {/* Section Header */}
+      <div className="flex items-center gap-3 mb-5 select-none">
+        <div className="w-1.5 h-6 bg-gradient-to-b from-[#7C3AED] to-[#8B5CF6] rounded-full" />
+        <h3 className="text-2xl font-bold tracking-tight text-[#FAFAFA] font-sans">
+          {title}
+        </h3>
+      </div>
+
+      {/* Carousel Container */}
       <CarouselLayout>
         <EachUtils
           of={movieList}
           render={(item, index) => (
             <div
-              className="carousel-item w-1/2 md:w-1/6 px-1"
-              key={index}
-              onMouseLeave={() => {
-                setIsHover(false);
-                setIdMovie(null);
-              }}
+              className="w-[135px] sm:w-[150px] md:w-[165px] lg:w-[175px] xl:w-[180px] shrink-0"
+              key={item.id || index}
             >
-              <MovieCard
-                data={item}
-                isHover={isHover}
-                setIsHover={setIsHover}
-              />
+              <MovieCard data={item} />
             </div>
           )}
         />
@@ -56,3 +54,5 @@ const MovieList = ({ title, moviesType }) => {
 };
 
 export default MovieList;
+
+

@@ -1,28 +1,22 @@
-import ReactPlayer from "react-player";
-import React, { useEffect, useState } from "react";
-import { GoChevronDown, GoPlay, GoPlusCircle, GoTrash } from "react-icons/go";
+import React, { useState } from "react";
+import { GoStar, GoPlusCircle, GoCheck } from "react-icons/go";
 import { motion } from "framer-motion";
 import { useAtom } from "jotai";
 import {
   emailStorageAtom,
-  idMovieAtom,
   isFavoritedAtom,
   isFetchingAtom,
-  isOpenModalAtom,
   tokenAtom,
 } from "@/jotai/atoms";
-import { getVideoUrl } from "@/utils/getVideoUrl";
 import Skeleton from "./Skeleton";
 import { useNavigate } from "react-router-dom";
 import { axiosInstanceExpress } from "@/utils/axios";
 import Notification from "../../Elements/Notification";
 import { checkFavoriteMovies } from "@/utils/checkFavoriteMovies";
 
-const MovieCard = ({ data, isHover, setIsHover }) => {
+const MovieCard = ({ data }) => {
   const navigate = useNavigate();
 
-  const [idMovie, setIdMovie] = useAtom(idMovieAtom);
-  const [, setIsOpenModal] = useAtom(isOpenModalAtom);
   const [isFetching] = useAtom(isFetchingAtom);
   const [tokenStorage] = useAtom(tokenAtom);
   const [emailStorage] = useAtom(emailStorageAtom);
@@ -30,10 +24,19 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
 
   const [isSubmit, setIsSubmit] = useState(false);
   const [notifMessage, setNotifMessage] = useState(null);
-  const [videoUrl, setVideoUrl] = useState(null);
 
-  const handleAddFavoriteMovie = async () => {
-    if (!emailStorage && !tokenStorage) return;
+  const handleCardClick = () => {
+    if (data?.id) {
+      navigate("/movie/" + data.id);
+    }
+  };
+
+  const handleAddFavoriteMovie = async (e) => {
+    e.stopPropagation();
+    if (!emailStorage && !tokenStorage) {
+      navigate("/login");
+      return;
+    }
 
     try {
       setIsSubmit(true);
@@ -43,25 +46,25 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
         data,
       });
       if (addMovie.status !== 201)
-        return setNotifMessage(`Film ${data.title} Failed to Add`);
-      setNotifMessage(`Film ${data.title} Success Added`);
+        return setNotifMessage(`Failed to add ${data.title}`);
+      setNotifMessage(`Added ${data.title} to favorites`);
       setIsFavorited(true);
 
       setTimeout(() => {
         setIsSubmit(false);
         setNotifMessage(null);
-      }, 3000);
+      }, 2500);
     } catch (error) {
-      setNotifMessage(`Sorry, ${error.message}`);
-
+      setNotifMessage(`Error: ${error.message}`);
       setTimeout(() => {
         setIsSubmit(false);
         setNotifMessage(null);
-      }, 3000);
+      }, 2500);
     }
   };
 
-  const handleRemoveFavoriteMovies = async () => {
+  const handleRemoveFavoriteMovies = async (e) => {
+    e.stopPropagation();
     if (!emailStorage && !tokenStorage) return;
     try {
       setIsSubmit(true);
@@ -73,105 +76,101 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
         },
       });
       if (removeMovie.status !== 204) {
-        return setNotifMessage(`"Failed to Remove Movie ${data.title}"`);
+        return setNotifMessage(`Failed to remove ${data.title}`);
       }
-      setNotifMessage(`${data.title} Success to Remove`);
+      setNotifMessage(`Removed ${data.title} from favorites`);
       setIsFavorited(false);
       setTimeout(() => {
         setIsSubmit(false);
         setNotifMessage(null);
-      }, 3000);
+      }, 2500);
     } catch (error) {
-      setNotifMessage(`Sorry, ${error.message}`);
+      setNotifMessage(`Error: ${error.message}`);
       setTimeout(() => {
         setIsSubmit(false);
         setNotifMessage(null);
-      }, 3000);
+      }, 2500);
     }
   };
 
   if (isFetching) return <Skeleton />;
 
+  const posterSrc = data?.poster_path
+    ? `${import.meta.env.VITE_BASE_URL_TMDB_IMAGE}${data.poster_path}`
+    : "https://via.placeholder.com/300x450/18181B/FAFAFA?text=No+Poster";
+
+  const releaseYear = data?.release_date ? data.release_date.split("-")[0] : null;
+
   return (
     <>
       {isSubmit && notifMessage && <Notification message={notifMessage} />}
-      {isHover && idMovie === data.id ? (
+      
+      <div className="flex flex-col group cursor-pointer select-none" onClick={handleCardClick}>
+        {/* Poster Container */}
         <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ ease: "easeInOut", duration: 0 }}
-          className="relative shadow-md transition-all w-full"
-        >
-          <div className="hover:scale-110 transition-all">
-            <ReactPlayer
-              url={`https://youtube.com/watch?v=${videoUrl}`}
-              playing={true}
-              loop={true}
-              muted={true}
-              width={"100%"}
-              height={"180px"}
-              controls={false}
-            />
-          </div>
-          <div className="h-auto p-2 bg-[#141414] flex flex-col gap-1.5 ">
-            <section className="mt-1 flex justify-between">
-              <div className="flex gap-2 ">
-                <button
-                  onClick={() => navigate("/watch/" + videoUrl)}
-                  className="cursor-pointer"
-                >
-                  <GoPlay size={32} />
-                </button>
-                <button
-                  className="cursor-pointer"
-                  onClick={
-                    isFavorited
-                      ? handleRemoveFavoriteMovies
-                      : handleAddFavoriteMovie
-                  }
-                >
-                  {isFavorited ? (
-                    <GoTrash size={32} />
-                  ) : (
-                    <GoPlusCircle size={32} />
-                  )}
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={() => setIsOpenModal(true)}
-                  className="rounded-full p-1 border"
-                >
-                  <GoChevronDown size={20} />
-                </button>
-              </div>
-            </section>
-            <section className="text-left">
-              <h2 className="font-semibold">{data.title}</h2>
-              <p className="text-green-400">Popularity: {data.popularity}</p>
-            </section>
-          </div>
-        </motion.div>
-      ) : (
-        <img
+          whileHover={{ scale: 1.04 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
           onMouseEnter={() => {
-            setIsHover(true);
-            setIdMovie(data.id);
-            getVideoUrl({ movie_id: data.id }).then((result) =>
-              setVideoUrl(result)
-            );
-            checkFavoriteMovies({
-              emailStorage,
-              tokenStorage,
-              idMovie: data.id,
-            }).then((result) => setIsFavorited(result));
+            if (emailStorage && tokenStorage && data?.id) {
+              checkFavoriteMovies({
+                emailStorage,
+                tokenStorage,
+                idMovie: data.id,
+              }).then((result) => setIsFavorited(result));
+            }
           }}
-          src={`${import.meta.env.VITE_BASE_URL_TMDB_IMAGE}${data.poster_path}`}
-          className="w-full max-h-72 object-cover rounded-xl cursor-pointer"
-        />
-      )}
+          className="relative w-full aspect-[2/3] rounded-2xl overflow-hidden bg-[#18181B] border border-[#3F3F46]/40 group-hover:border-[#7C3AED]/60 shadow-lg group-hover:shadow-2xl group-hover:shadow-[#7C3AED]/20 transition-all duration-200"
+        >
+          {/* Poster Image */}
+          <img
+            src={posterSrc}
+            alt={data?.title || "Movie Poster"}
+            className="w-full h-full object-cover transition-all duration-300 group-hover:brightness-105"
+            loading="lazy"
+          />
+
+          {/* Rating Badge Overlay */}
+          {data?.vote_average > 0 && (
+            <div className="absolute top-2.5 right-2.5 z-10 bg-[#09090B]/80 backdrop-blur-md border border-[#3F3F46]/60 text-[#FAFAFA] text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-md">
+              <GoStar className="text-yellow-400 fill-yellow-400" size={12} />
+              <span>{data.vote_average.toFixed(1)}</span>
+            </div>
+          )}
+
+          {/* Quick Favorite Action Button on Hover */}
+          <button
+            onClick={isFavorited ? handleRemoveFavoriteMovies : handleAddFavoriteMovie}
+            className={`absolute top-2.5 left-2.5 z-10 p-1.5 rounded-lg border text-xs backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 ${
+              isFavorited
+                ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400"
+                : "bg-[#09090B]/80 border-[#3F3F46] text-[#FAFAFA] hover:bg-[#27272A]"
+            }`}
+            title={isFavorited ? "Remove from favorites" : "Add to favorites"}
+          >
+            {isFavorited ? <GoCheck size={14} /> : <GoPlusCircle size={14} />}
+          </button>
+        </motion.div>
+
+        {/* Movie Info OUTSIDE Card Below Poster */}
+        <div className="mt-2.5 px-0.5 flex flex-col gap-0.5 text-left">
+          <h4 className="text-[#FAFAFA] font-bold text-sm sm:text-base line-clamp-1 group-hover:text-[#8B5CF6] transition-colors">
+            {data?.title}
+          </h4>
+
+          <div className="flex items-center justify-between text-xs text-[#A1A1AA] font-medium">
+            <span>{releaseYear || "Movie"}</span>
+            {data?.original_language && (
+              <span className="uppercase text-[10px] text-[#A1A1AA] bg-[#18181B] border border-[#3F3F46]/50 px-1.5 py-0.2 rounded">
+                {data.original_language}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
 
 export default MovieCard;
+
+

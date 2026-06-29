@@ -1,40 +1,72 @@
 import React, { useState } from "react";
-import { GoSearch } from "react-icons/go";
-import { motion } from "framer-motion";
+import { GoSearch, GoX } from "react-icons/go";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAtom } from "jotai";
 import { searchMoviesAtom } from "@/jotai/atoms";
 
 const InputSearchMovies = () => {
   const [isShow, setIsShow] = useState(false);
-  const [, setSearchMovies] = useAtom(searchMoviesAtom)
+  const [searchMovies, setSearchMovies] = useAtom(searchMoviesAtom);
 
   const handleChange = (e) => {
-    if(e.target.value.length > 3) {
-      setSearchMovies(e.target.value)
+    if (e.target.value.length > 3) {
+      setSearchMovies(e.target.value);
     } else {
-      setSearchMovies(null)
+      setSearchMovies(null);
     }
-  }
+  };
+
+  const handleClose = () => {
+    setIsShow(false);
+    setSearchMovies(null);
+  };
 
   return (
-    <div className="relative">
-      <motion.input
-        initial={{ translateX: -20 }}
-        animate={{ translateX: isShow ? 0 : -20 }}
-        className="bg-black borders py-2 pl-12"
-        style={{ display: isShow ? "block" : "none" }}
-        placeholder="title, people, genres..."
-        onChange={handleChange}
-      />
-      <GoSearch
-        size={24}
-        className={
-          isShow ? "absolute top-1/2 -translate-y-1/2 left-3 z-10" : null
-        }
-        onClick={() => setIsShow(!isShow)}
-      />
+    <div className="relative flex items-center">
+      <AnimatePresence>
+        {isShow && (
+          <motion.div
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 240, opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="relative overflow-hidden mr-2"
+          >
+            <input
+              autoFocus
+              type="text"
+              className="w-full bg-[#18181B] text-[#FAFAFA] text-sm py-2 pl-9 pr-8 rounded-full border border-[#3F3F46] focus:border-[#7C3AED] focus:outline-none placeholder-[#A1A1AA] transition-colors"
+              placeholder="Search movies, genres..."
+              onChange={handleChange}
+            />
+            <GoSearch
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A1A1AA]"
+            />
+            {searchMovies && (
+              <button
+                onClick={handleClose}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A1A1AA] hover:text-[#FAFAFA]"
+              >
+                <GoX size={14} />
+              </button>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!isShow && (
+        <button
+          onClick={() => setIsShow(true)}
+          className="p-2 text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18181B] rounded-full transition-colors cursor-pointer"
+          title="Search"
+        >
+          <GoSearch size={20} />
+        </button>
+      )}
     </div>
   );
 };
 
 export default InputSearchMovies;
+

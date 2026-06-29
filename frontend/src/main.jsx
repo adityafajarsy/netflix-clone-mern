@@ -9,6 +9,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Favorite from "./pages/Favorite";
 
+import MovieDetail from "./pages/MovieDetail";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "browse",
     element: <Browse />,
+  },
+  {
+    path: "movie/:id",
+    element: <MovieDetail />,
   },
   {
     path: "watch/:id",
