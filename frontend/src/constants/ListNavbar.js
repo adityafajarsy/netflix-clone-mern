@@ -21,7 +21,7 @@ export const LIST_NAVBAR = [
   },
   {
     title: "Trending 2026",
-    url: "/browse",
+    url: "/trending",
     icon: "trending",
     isSpecial: true,
   },

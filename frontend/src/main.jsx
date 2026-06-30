@@ -11,6 +11,7 @@ import MovieDetail from "./pages/MovieDetail";
 import TvSeries from "./pages/TvSeries";
 import Genres from "./pages/Genres";
 import GenreMovies from "./pages/GenreMovies";
+import Trending from "./pages/Trending";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
   {
     path: "/genre/:genreId",
     element: <GenreMovies />,
+  },
+  {
+    path: "/trending",
+    element: <Trending />,
   },
 ]);
 

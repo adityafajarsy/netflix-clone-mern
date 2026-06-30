@@ -18,12 +18,14 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(MONGO_URL).catch((err) => {
-  if (err) {
-    console.log("Tidak dapat terkoneksi MongoDB!");
-    throw err;
-  }
-});
+try {
+  await mongoose.connect(MONGO_URL);
+  console.log("MongoDB terkoneksi!");
+} catch (err) {
+  console.log("Tidak dapat terkoneksi MongoDB!");
+  throw err;
+}
+;
 
 app.use(routes);
 

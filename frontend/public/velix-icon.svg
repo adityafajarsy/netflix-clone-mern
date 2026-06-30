@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="velix-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#velix-grad)" />
+  <path d="M140 140 L230 372 C236 388, 252 396, 268 388 C273 385, 278 380, 282 372 L372 140 C378 124, 370 106, 354 100 C346 97, 337 98, 330 104 L256 295 L182 104 C173 95, 158 93, 147 101 C139 107, 134 117, 136 127 C137 132, 138 136, 140 140 Z" fill="#FFFFFF" />
+</svg>
